@@ -1,0 +1,61 @@
+[11:53 am, 20/12/2024] Karampreet Kaur: #include <iostream>
+using namespace std;
+
+class CustomArray {
+private:
+    int* arr;       // Pointer for the array
+    int size;       // Size of the array
+    int offset = 3; // Starting index
+
+public:
+    // Constructor to initialize the array
+    CustomArray(int s) : size(s) {
+        arr = new int[size]; // Dynamic memory allocation
+    }
+
+    // Destructor to free allocated memory
+    ~CustomArray() {
+        delete[] arr;
+    }
+
+    // Function to set elements in the array
+    void setElements() {
+        cout << "Enter " << size << " elements for the array: ";
+        for (int i = 0; i < size; ++i) {
+            cin >> arr[i];
+        }
+    }
+
+    // Function to access an element at a given index
+    void accessElement(int index) {
+        int actualIndex = index - offset;
+        if (actualIndex >= 0 && actualIndex < size) {
+            cout << "Index " << index << " has the value: " << arr[actualIndex] << endl;
+        } else {
+            cout << "Error: Index " << index << " is out of bounds." << endl;
+        }
+    }
+};
+
+int main() {
+    int size;
+    cout << "Enter the size of the array: ";
+    cin >> size;
+
+    CustomArray array(size);
+    array.setElements();
+
+    char choice;
+    do {
+        int index;
+        cout << "Enter the index (starting from 3) to access: ";
+        cin >> index;
+        array.accessElement(index);
+
+        cout << "Do you want to access another element? (y/n): ";
+        cin >> choice;
+    } while (choice == 'y' || choice == 'Y');
+
+    return 0;
+}
+[11:54 am, 20/12/2024] Karampreet Kaur: 
