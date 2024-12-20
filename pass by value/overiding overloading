@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Base class
+class Calculator {
+public:
+    // Overloaded function: add two integers
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    // Overloaded function: add three integers
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    // Virtual function to demonstrate overriding
+    virtual void displayMessage() {
+        cout << "This is the Calculator class." << endl;
+    }
+};
+
+// Derived class
+class AdvancedCalculator : public Calculator {
+public:
+    // Override displayMessage
+    void displayMessage() override {
+        cout << "This is the AdvancedCalculator class." << endl;
+    }
+};
+
+int main() {
+    int choice;
+    cout << "Choose an operation:\n";
+    cout << "1. Add two numbers\n";
+    cout << "2. Add three numbers\n";
+    cout << "3. Display message\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+    if (choice == 1 || choice == 2) {
+        Calculator calc;
+        if (choice == 1) {
+            int num1, num2;
+            cout << "Enter two numbers: ";
+            cin >> num1 >> num2;
+            cout << "The sum is: " << calc.add(num1, num2) << endl;
+        } else {
+            int num1, num2, num3;
+            cout << "Enter three numbers: ";
+            cin >> num1 >> num2 >> num3;
+            cout << "The sum is: " << calc.add(num1, num2, num3) << endl;
+        }
+    } else if (choice == 3) {
+        AdvancedCalculator advCalc;
+        advCalc.displayMessage();
+    } else {
+        cout << "Invalid choice!" << endl;
+    }
+
+    return 0;
+}
