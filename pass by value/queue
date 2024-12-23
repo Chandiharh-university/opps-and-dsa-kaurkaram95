@@ -1,0 +1,95 @@
+#include <iostream>
+#define SIZE 5  // Define the size of the queue
+
+class Queue {
+private:
+    int items[SIZE], front, rear;
+
+public:
+    // Constructor to initialize the queue
+    Queue() {
+        front = -1;
+        rear = -1;
+    }
+
+    // Function to check if the queue is full
+    bool isFull() {
+        return (rear == SIZE - 1);
+    }
+
+    // Function to check if the queue is empty
+    bool isEmpty() {
+        return (front == -1 || front > rear);
+    }
+
+    // Function to add an element to the queue
+    void enqueue(int element) {
+        if (isFull()) {
+            std::cout << "Queue is full. Cannot add " << element << ".\n";
+        } else {
+            if (front == -1) front = 0; // Set front to 0 on first enqueue
+            rear++;
+            items[rear] = element;
+            std::cout << "Enqueued: " << element << "\n";
+        }
+    }
+
+    // Function to remove an element from the queue
+    void dequeue() {
+        if (isEmpty()) {
+            std::cout << "Queue is empty. Nothing to dequeue.\n";
+        } else {
+            std::cout << "Dequeued: " << items[front] << "\n";
+            front++;
+        }
+    }
+
+    // Function to display the queue
+    void display() {
+        if (isEmpty()) {
+            std::cout << "Queue is empty.\n";
+        } else {
+            std::cout << "Queue elements: ";
+            for (int i = front; i <= rear; i++) {
+                std::cout << items[i] << " ";
+            }
+            std::cout << "\n";
+        }
+    }
+};
+
+int main() {
+    Queue q;
+    int choice, value;
+
+    do {
+        std::cout << "\n--- Queue Menu ---\n";
+        std::cout << "1. Enqueue\n";
+        std::cout << "2. Dequeue\n";
+        std::cout << "3. Display\n";
+        std::cout << "4. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                std::cout << "Enter the value to enqueue: ";
+                std::cin >> value;
+                q.enqueue(value);
+                break;
+            case 2:
+                q.dequeue();
+                break;
+            case 3:
+                q.display();
+                break;
+            case 4:
+                std::cout << "Exiting program.\n";
+                break;
+            default:
+                std::cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 4);
+
+    return 0;
+}
