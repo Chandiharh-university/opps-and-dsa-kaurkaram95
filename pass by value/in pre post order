@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+
+// Define the structure of a tree node
+struct TreeNode {
+    int value;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int val) : value(val), left(nullptr), right(nullptr) {}
+};
+
+// Function to insert nodes into a binary tree
+TreeNode* createTree() {
+    cout << "Enter value (-1 for no node): ";
+    int value;
+    cin >> value;
+
+    if (value == -1) {
+        return nullptr;
+    }
+
+    TreeNode* newNode = new TreeNode(value);
+
+    cout << "Enter left child of " << value << endl;
+    newNode->left = createTree();
+
+    cout << "Enter right child of " << value << endl;
+    newNode->right = createTree();
+
+    return newNode;
+}
+
+// Inorder traversal: Left -> Root -> Right
+void inorderTraversal(TreeNode* root) {
+    if (!root) return;
+    inorderTraversal(root->left);
+    cout << root->value << " ";
+    inorderTraversal(root->right);
+}
+
+// Preorder traversal: Root -> Left -> Right
+void preorderTraversal(TreeNode* root) {
+    if (!root) return;
+    cout << root->value << " ";
+    preorderTraversal(root->left);
+    preorderTraversal(root->right);
+}
+
+// Postorder traversal: Left -> Right -> Root
+void postorderTraversal(TreeNode* root) {
+    if (!root) return;
+    postorderTraversal(root->left);
+    postorderTraversal(root->right);
+    cout << root->value << " ";
+}
+
+int main() {
+    cout << "Create the binary tree:\n";
+    TreeNode* root = createTree();
+
+    cout << "\nInorder Traversal: ";
+    inorderTraversal(root);
+
+    cout << "\nPreorder Traversal: ";
+    preorderTraversal(root);
+
+    cout << "\nPostorder Traversal: ";
+    postorderTraversal(root);
+
+    return 0;
+}
