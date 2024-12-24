@@ -1,0 +1,134 @@
+#include <iostream>
+#include <algorithm> // For std::max
+using namespace std;
+
+// Structure for a TreeNode
+struct TreeNode {
+    int value;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int val) : value(val), left(nullptr), right(nullptr) {}
+};
+
+// Insert into a Binary Search Tree (BST)
+TreeNode* insertBST(TreeNode* root, int value) {
+    if (!root) {
+        return new TreeNode(value);
+    }
+    if (value < root->value) {
+        root->left = insertBST(root->left, value);
+    } else if (value > root->value) {
+        root->right = insertBST(root->right, value);
+    }
+    return root;
+}
+
+// Get the height of a tree node
+int height(TreeNode* node) {
+    if (!node) return 0;
+    return 1 + max(height(node->left), height(node->right));
+}
+
+// Get the balance factor of a tree node
+int getBalance(TreeNode* node) {
+    if (!node) return 0;
+    return height(node->left) - height(node->right);
+}
+
+// Rotate right
+TreeNode* rotateRight(TreeNode* y) {
+    TreeNode* x = y->left;
+    TreeNode* T = x->right;
+
+    x->right = y;
+    y->left = T;
+
+    return x;
+}
+
+// Rotate left
+TreeNode* rotateLeft(TreeNode* x) {
+    TreeNode* y = x->right;
+    TreeNode* T = y->left;
+
+    y->left = x;
+    x->right = T;
+
+    return y;
+}
+
+// Insert into an AVL Tree
+TreeNode* insertAVL(TreeNode* root, int value) {
+    if (!root) {
+        return new TreeNode(value);
+    }
+    if (value < root->value) {
+        root->left = insertAVL(root->left, value);
+    } else if (value > root->value) {
+        root->right = insertAVL(root->right, value);
+    } else {
+        return root; // Duplicate values not allowed
+    }
+
+    // Update the balance factor and balance the tree
+    int balance = getBalance(root);
+
+    // Left Left Case
+    if (balance > 1 && value < root->left->value) {
+        return rotateRight(root);
+    }
+
+    // Right Right Case
+    if (balance < -1 && value > root->right->value) {
+        return rotateLeft(root);
+    }
+
+    // Left Right Case
+    if (balance > 1 && value > root->left->value) {
+        root->left = rotateLeft(root->left);
+        return rotateRight(root);
+    }
+
+    // Right Left Case
+    if (balance < -1 && value < root->right->value) {
+        root->right = rotateRight(root->right);
+        return rotateLeft(root);
+    }
+
+    return root;
+}
+
+// Inorder Traversal
+void inorderTraversal(TreeNode* root) {
+    if (!root) return;
+    inorderTraversal(root->left);
+    cout << root->value << " ";
+    inorderTraversal(root->right);
+}
+
+int main() {
+    TreeNode* bstRoot = nullptr;
+    TreeNode* avlRoot = nullptr;
+
+    int n;
+    cout << "Enter the number of nodes: ";
+    cin >> n;
+
+    cout << "Enter " << n << " values to insert into the trees:" << endl;
+    for (int i = 0; i < n; i++) {
+        int value;
+        cin >> value;
+        bstRoot = insertBST(bstRoot, value);  // Insert into BST
+        avlRoot = insertAVL(avlRoot, value); // Insert into AVL Tree
+    }
+
+    // Display the trees
+    cout << "\nInorder Traversal of Binary Search Tree (BST): ";
+    inorderTraversal(bstRoot);
+
+    cout << "\nInorder Traversal of AVL Tree: ";
+    inorderTraversal(avlRoot);
+
+    return 0;
+}
