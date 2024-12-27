@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
+
+using namespace std;
+
+const int INF = numeric_limits<int>::max();
+
+// Dijkstra's Algorithm
+void dijkstra(int n, int start, const vector<vector<pair<int, int>>>& graph) {
+    vector<int> dist(n, INF); // Distance array
+    dist[start] = 0;
+
+    // Priority queue for min-heap (distance, vertex)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+    pq.push({0, start});
+
+    while (!pq.empty()) {
+        int currentDist = pq.top().first;
+        int u = pq.top().second;
+        pq.pop();
+
+        if (currentDist > dist[u])
+            continue;
+
+        for (const auto& [v, weight] : graph[u]) {
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    // Output the shortest distances
+    cout << "Shortest distances from vertex " << start << ":\n";
+    for (int i = 0; i < n; ++i) {
+        if (dist[i] == INF)
+            cout << "Vertex " << i << " is unreachable" << endl;
+        else
+            cout << "Vertex " << i << " : " << dist[i] << endl;
+    }
+}
+
+int main() {
+    int n, m;
+    cout << "Enter the number of vertices: ";
+    cin >> n;
+    cout << "Enter the number of edges: ";
+    cin >> m;
+
+    vector<vector<pair<int, int>>> graph(n);
+    cout << "Enter the edges (u v weight) one by one:\n";
+    for (int i = 0; i < m; ++i) {
+        int u, v, weight;
+        cin >> u >> v >> weight;
+        graph[u].emplace_back(v, weight);
+        graph[v].emplace_back(u, weight); // Uncomment this line for an undirected graph
+    }
+
+    int start;
+    cout << "Enter the starting vertex: ";
+    cin >> start;
+
+    dijkstra(n, start, graph);
+
+    return 0;
+}
