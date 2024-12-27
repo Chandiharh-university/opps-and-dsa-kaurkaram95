@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+// A structure to represent a weighted edge
+struct Edge {
+    int vertex; // Connected vertex
+    int weight; // Weight of the edge
+};
+
+// Comparator for priority queue
+struct CompareEdge {
+    bool operator()(Edge const& e1, Edge const& e2) {
+        return e1.weight > e2.weight; // Min-heap based on edge weight
+    }
+};
+
+// Function to find the MST using Prim's Algorithm
+void findMST(int V, vector<vector<Edge>>& adjList) {
+    vector<bool> inMST(V, false); // To track vertices included in MST
+    vector<int> parent(V, -1);    // To store the MST
+    vector<int> key(V, INT_MAX);  // To store the minimum weight edge to a vertex
+
+    priority_queue<Edge, vector<Edge>, CompareEdge> pq; // Min-heap for edge weights
+
+    // Start from vertex 0
+    key[0] = 0;
+    pq.push({0, 0}); // (vertex, weight)
+
+    while (!pq.empty()) {
+        int u = pq.top().vertex; // Vertex with the smallest weight edge
+        pq.pop();
+
+        if (inMST[u]) continue; // Skip if already in MST
+        inMST[u] = true;
+
+        // Iterate over all adjacent vertices of u
+        for (const Edge& neighbor : adjList[u]) {
+            int v = neighbor.vertex;
+            int weight = neighbor.weight;
+
+            // If v is not in MST and weight of (u, v) is smaller than current key[v]
+            if (!inMST[v] && weight < key[v]) {
+                key[v] = weight;
+                parent[v] = u;
+                pq.push({v, weight});
+            }
+        }
+    }
+
+    // Print the MST
+    cout << "Edges in the Minimum Spanning Tree:\n";
+    for (int i = 1; i < V; ++i) {
+        cout << parent[i] << " - " << i << " (Weight: " << key[i] << ")\n";
+    }
+}
+
+int main() {
+    int V, E;
+    cout << "Enter the number of vertices and edges: ";
+    cin >> V >> E;
+
+    // Adjacency list to store the graph
+    vector<vector<Edge>> adjList(V);
+
+    cout << "Enter the edges (u v weight):\n";
+    for (int i = 0; i < E; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adjList[u].push_back({v, w});
+        adjList[v].push_back({u, w}); // Since the graph is undirected
+    }
+
+    findMST(V, adjList);
+
+    return 0;
+}
